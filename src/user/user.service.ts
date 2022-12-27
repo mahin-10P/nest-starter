@@ -12,7 +12,6 @@ export class UserService {
       
   async createUser(createUserDto) {
     const user = await this.userRepository.findOne({ where: { email:createUserDto.email } });
-     console.log(user,"userss");
     if (user) {
       throw new HttpException('Email already exist', HttpStatus.FOUND);    
   }
@@ -32,17 +31,15 @@ export class UserService {
     return  this.userRepository.delete(id);
   }
 
-  editUser(userObj){
-    return  this.userRepository.update(userObj.id, userObj);
+  async editUser(userObj, user){
+    const updatedUser = await this.userRepository.update(user.id, userObj);
+    return  updatedUser;
   }
 
   async loginUser(userObj){
-    console.log(userObj,"userObj");
     let user = await this.userRepository.findOne({ where: { email:userObj.email } });
-    console.log(user,"userss");
     if(user){
       const validatePassword = await this.validatePassword(userObj.password, user.password);
-      console.log(validatePassword,"validatee password")
       if(validatePassword){
         delete user.password;
         return user;  
