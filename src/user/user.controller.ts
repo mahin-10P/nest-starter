@@ -21,6 +21,7 @@ export class UserController {
   constructor(private readonly userService: UserService) { }
 
   @Get()
+  @UseGuards(AuthGuard('jwt'))
   getUsers() {
     return this.userService.getUsers();
   }
